@@ -9,26 +9,27 @@ class CityCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100,
-      width: 100,
+      height: 110,
+      width: 110,
       child: Column(
         children: [
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
+              elevation: 0,
               // padding: const EdgeInsets.all(10),
             ),
             clipBehavior: Clip.antiAlias,
             child: Image.network(
               img,
-              fit: BoxFit.scaleDown,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(
-            height: 5,
+            height: 2,
           ),
-          Text(name),
+          Text(name,style: const TextStyle(fontSize: 12),),
         ],
       ),
     );

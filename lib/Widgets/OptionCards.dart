@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'MoreInfoPage.dart';
+
 class OptionCards extends StatelessWidget {
   const OptionCards({
     super.key,
@@ -27,13 +29,13 @@ class OptionCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(right: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
             onTap: () {
-              onTap();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MoreInfoPage()));
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,21 +44,23 @@ class OptionCards extends StatelessWidget {
                   children: [
                     Container(
                       width: width,
+                      height: 150,
                       decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(22)),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
                           color: Colors.red),
                       clipBehavior: Clip.antiAlias,
                       child: Image.network(
                         imgUrl,
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.fitHeight,
                       ),
                     ),
                     Positioned(
-                      left: 120,
+                      left: 160,
                       child: LikeButton(onPressed: () {}, color: Colors.red),
                     ),
                   ],
                 ),
+                SizedBox(height: 10,),
                 SizedBox(
                     width: width,
                     child: LikeListTile(
@@ -65,9 +69,6 @@ class OptionCards extends StatelessWidget {
                       subtitle: " W",
                       color: color,
                     )),
-                const SizedBox(
-                  height: 5,
-                ),
                 Text(name),
                 Text(
                   location,
@@ -117,9 +118,7 @@ class LikeListTile extends StatelessWidget {
   final Color color;
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.all(0),
-      subtitle: Row(
+    return Row(
         children: [
           const Icon(Icons.star, color: Colors.red, size: 15),
           const SizedBox(width: 5),
@@ -137,8 +136,7 @@ class LikeListTile extends StatelessWidget {
               )),
           Text(subtitle)
         ],
-      ),
-    );
+      );
   }
 }
 
