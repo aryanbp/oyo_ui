@@ -9,6 +9,7 @@ class Carousel extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
         itemCount: cards.length,
         itemBuilder: (BuildContext context, int index){
           return cards[index];

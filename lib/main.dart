@@ -1,9 +1,14 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:oyo_ui/Cubit/hotel_cubit.dart';
+import 'package:oyo_ui/Cubit/hotel_repository.dart';
+import 'package:oyo_ui/Cubit/hotel_state.dart';
 
 import 'Widgets/Carousel.dart';
 import 'Widgets/CityCards.dart';
 import 'Widgets/FilterCards.dart';
+import 'Widgets/MoreInfoPage.dart';
 import 'Widgets/OptionCards.dart';
 
 void main() {
@@ -15,15 +20,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'OYO',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
+    return BlocProvider(
+      create: (context) => HotelCubit(HotelRepository()),
+      child: MaterialApp(
+        title: 'OYO',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primaryColor: Colors.white,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        home: const MyHomePage(title: 'OYO'),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const MyHomePage(title: 'OYO'),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -38,6 +46,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final cubit = context.read<HotelCubit>();
+      cubit.fetchHotel();
+    });
+  }
+
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
@@ -58,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       drawer: const Drawer(),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
         child: ListView(
           // mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,22 +111,28 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //City Box
             const SizedBox(
-              width: double.infinity,
               height: 90,
               child: Carousel(cards: [
                 CityCards(
                   name: 'Nearby',
-                  img: 'https://static.thenounproject.com/png/1054386-200.png',
+                  img: 'assets/send.png',
                 ),
                 CityCards(
                   name: 'Mumbai',
-                  img:
-                      'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSOaOZNTf_nNNs2L3E5kXBQVhpKm60j9AGCE0HPYJFq0qPoqWPY',
+                  img: 'assets/mumbai.jfif',
                 ),
                 CityCards(
-                    name: 'All cities',
-                    img:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXMW2QRWgOfPNEIYNGEyUFNp8kNA5I-jEikw&s')
+                  name: 'Chennai',
+                  img: 'assets/chennai.jpg',
+                ),
+                CityCards(
+                  name: 'Bangalore',
+                  img: 'assets/banglore.jpg',
+                ),
+                CityCards(
+                  name: 'Delhi',
+                  img: 'assets/delhi.jpg',
+                ),
               ]),
             ),
             //Filter Box
@@ -147,41 +170,81 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //Option Box
             SizedBox(
-              width: double.infinity,
-              height: 300,
-              child: Carousel(cards: [
-                OptionCards(
-                    imgUrl:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
-                    cprice: '573',
-                    oprice: '2950',
-                    discount: '75',
-                    name: 'OYO Royal Homes',
-                    location: 'Bannerghatta Road, Bangalore',
-                    color: Colors.green,
-                    onTap: () {}),
-                OptionCards(
-                    imgUrl:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
-                    cprice: '573',
-                    oprice: '2950',
-                    discount: '75',
-                    name: 'OYO Royal Homes',
-                    location: 'Bannerghatta Road, Bangalore',
-                    color: Colors.green,
-                    onTap: () {}),
-                OptionCards(
-                    imgUrl:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
-                    cprice: '573',
-                    oprice: '2950',
-                    discount: '75',
-                    name: 'OYO Royal Homes',
-                    location: 'Bannerghatta Road, Bangalore',
-                    color: Colors.green,
-                    onTap: () {}),
-              ]),
-            ),
+                width: double.infinity,
+                height: 300,
+                child: BlocBuilder<HotelCubit, HotelState>(
+                  builder: (context, state) {
+                    if (state is InitHotelState || state is LoadingHotelState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is ResponseHotelState) {
+                      final hotels = state.hotels;
+                      return Carousel(
+                        cards: hotels
+                            .map((hotel) => OptionCards(
+                                  imgUrl: hotel.imgUrl,
+                                  cprice: hotel.currentPrice,
+                                  oprice: hotel.oldPrice,
+                                  discount: hotel.discount,
+                                  name: hotel.name,
+                                  location: hotel.shortLocation,
+                                  color: Colors.red,
+                                  rating: hotel.rating,
+                                  like: hotel.like,
+                                  subtitle: hotel.subtitle,
+                                  sponsor: hotel.sponsor,
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MoreInfoPage(
+                                                hotel: hotels[
+                                                    int.parse(hotel.id) - 1])));
+                                  },
+                                ))
+                            .toList(),
+                      );
+                    }
+                    return const Center(
+                      child: Text('Something Went Wrong'),
+                    );
+                  },
+                )
+                // [
+                // OptionCards(
+                //     imgUrl:
+                //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
+                //     cprice: '573',
+                //     oprice: '2950',
+                //     discount: '75',
+                //     name: 'OYO Royal Homes',
+                //     location: 'Bannerghatta Road, Bangalore',
+                //     color: Colors.green,
+                //     onTap: () {}),
+                // OptionCards(
+                //     imgUrl:
+                //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
+                //     cprice: '573',
+                //     oprice: '2950',
+                //     discount: '75',
+                //     name: 'OYO Royal Homes',
+                //     location: 'Bannerghatta Road, Bangalore',
+                //     color: Colors.green,
+                //     onTap: () {}),
+                // OptionCards(
+                //     imgUrl:
+                //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
+                //     cprice: '573',
+                //     oprice: '2950',
+                //     discount: '75',
+                //     name: 'OYO Royal Homes',
+                //     location: 'Bannerghatta Road, Bangalore',
+                //     color: Colors.green,
+                //     onTap: () {}),
+                // ]
+                // );
+                ),
           ],
         ),
       ),
@@ -233,6 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 //
 // class CardFb1 extends StatelessWidget {
 //   final Widget item;

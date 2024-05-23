@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "imgUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s",
+    "currentPrice": "729.99",
+    "oldPrice": "959.99",
+    "discount": "10",
+    "name": "Grand View Hotel",
+    "shortLocation": "Miami, FL",
+    "fullLocation": "1 Beachfront Ave, Miami, FL 33139",
+    "shortReview": "Oceanfront location, spacious rooms.",
+    "rating": "4.5",
+    "like": "130",
+    "subtitle": "96",
+    "sponsor": "W"
+  },
+  {
+    "id": "2",
+    "imgUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/95/07/limak-eurasia-luxury.jpg?w=700&h=-1&s=1",
+    "currentPrice": "599",
+    "oldPrice": "999.00",
+    "discount": "20",
+    "name": "Cozy Comfort Inn",
+    "shortLocation": "Chicago, IL",
+    "fullLocation": "456 Main St, Chicago, IL 60601",
+    "shortReview": "Clean and affordable, close to downtown.",
+    "rating": "3.5",
+    "like": "100",
+    "subtitle": "116",
+    "sponsor": "W"
+  },
+  {
+    "id": "3",
+    "imgUrl": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/518332246.jpg?k=852d9e83009ac082a7bb8366d5e27fb1f21801ea9cb6dde9c14e1aa99c49ea63&o=&hp=1",
+    "currentPrice": "225.00",
+    "oldPrice": "749.99",
+    "discount": "25",
+    "name": "Mountainside Lodge",
+    "shortLocation": "Lake Tahoe, CA",
+    "fullLocation": "123 Pinewood Dr, Lake Tahoe, CA 96145",
+    "shortReview": "Beautiful mountain views, perfect for nature lovers.",
+    "rating": "2.9",
+    "like": "80",
+    "subtitle": "66",
+    "sponsor": "W"
+  }
+]

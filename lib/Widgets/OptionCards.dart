@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'MoreInfoPage.dart';
-
 class OptionCards extends StatelessWidget {
   const OptionCards({
     super.key,
@@ -13,6 +11,10 @@ class OptionCards extends StatelessWidget {
     required this.name,
     required this.location,
     required this.color,
+    required this.rating,
+    required this.like,
+    required this.subtitle,
+    required this.sponsor,
     required this.onTap,
     this.width = 200,
   });
@@ -24,6 +26,10 @@ class OptionCards extends StatelessWidget {
   final String name;
   final String location;
   final Color color;
+  final String rating;
+  final String like;
+  final String subtitle;
+  final String sponsor;
   final Function onTap;
   final double width;
   @override
@@ -35,7 +41,7 @@ class OptionCards extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MoreInfoPage()));
+              onTap();
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,13 +66,13 @@ class OptionCards extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 SizedBox(
                     width: width,
                     child: LikeListTile(
-                      rating: "3.5",
-                      likes: "130",
-                      subtitle: " W",
+                      rating: rating,
+                      likes: like,
+                      subtitle: sponsor,
                       color: color,
                     )),
                 Text(name),

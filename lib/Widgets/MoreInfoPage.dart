@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:oyo_ui/Widgets/Carousel.dart';
 
+import '../Cubit/hotel.dart';
 import 'OptionCards.dart';
+import 'OverviewCards.dart';
 
 class MoreInfoPage extends StatelessWidget {
-  const MoreInfoPage({super.key});
+  const MoreInfoPage({super.key,required this.hotel});
 
+  final Hotel hotel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +25,7 @@ class MoreInfoPage extends StatelessWidget {
                     color: Colors.red),
                 clipBehavior: Clip.antiAlias,
                 child: Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
+                  hotel.imgUrl,
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -50,12 +53,12 @@ class MoreInfoPage extends StatelessWidget {
               ),
             ],
           ),
-          const Padding(
+           Padding(
             padding: EdgeInsets.only(left: 40.0),
             child: SizedBox(
                 height: 80,
                 child: Carousel(
-                    cards: [OverviewCards(), OverviewCards(), OverviewCards()],
+                    cards: [OverviewCards(imageUrl: hotel.imgUrl,), OverviewCards(imageUrl: hotel.imgUrl,), OverviewCards(imageUrl: hotel.imgUrl,)],
                     )),
           ),
           Padding(
@@ -76,25 +79,25 @@ class MoreInfoPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox( height: 10,),
-                const Text(
-                  'OYO Flagship 2807 Shree Stays',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                 Text(
+                  hotel.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 const SizedBox(height: 10,),
-                const LikeListTile(
-                                  rating: "3.5",
-                                  likes: "130",
-                                  subtitle: " 96 reviews",
+                 LikeListTile(
+                                  rating: hotel.rating,
+                                  likes: hotel.like,
+                                  subtitle: "${hotel.subtitle}reviews",
                                   color: Colors.red,
                                 ),
-                const Text(
-                    '4.0 . Check-in rating > Stationary experience'), //Review
+                 Text(
+                    hotel.shortReview), //Review
                 Divider(
                   height: 30,
                   color: Colors.grey.shade200,
                 ),
-                const Text(
-                    '9/1, Arek er Road, Next to Rns Motors, Bannerghatta Road, Bangalore'), //Full location
+                 Text(
+                    hotel.fullLocation), //Full location
                 TextButton(
                     onPressed: () {},
                     child: const Text(
@@ -123,7 +126,7 @@ class MoreInfoPage extends StatelessWidget {
                         color: Colors.grey.shade100,
                         shape: BoxShape.circle,
                       ),
-                      child: const Text('W'),
+                      child:  Text(hotel.sponsor),
                     ),
                     const SizedBox(
                       width: 10,
@@ -134,7 +137,7 @@ class MoreInfoPage extends StatelessWidget {
                           children: [
                             const Text('Wizard discount available'),
                             Text(
-                              'Upto 10% extra discount for Wizard members',
+                              'Upto ${hotel.discount}% extra discount for Wizard members',
                               style: TextStyle(
                                   color: Colors.grey.shade500, fontSize: 10),
                             ),
@@ -160,24 +163,24 @@ class MoreInfoPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Column(
+             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
                   children: [
                     Text(
-                      '₹573 ',
+                      '₹'+hotel.currentPrice+' ',
                       style:
-                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '2890',
+                      hotel.oldPrice,
                       style:
                       const TextStyle(fontSize: 12, decoration: TextDecoration.lineThrough),
                     ),
                   ],
                 ),
-                Text(
+                const Text(
                   '+₹182 taxes & fees',
                   style:
                   TextStyle(fontSize: 12,color: Colors.blue),
@@ -229,38 +232,3 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class OverviewCards extends StatelessWidget {
-  const OverviewCards({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          Container(
-            width: 80,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              shape: BoxShape.rectangle,
-              color: Colors.black,
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Image.network(
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH_cdR2kCAXG3fewUIQs3dPaGYAyLzfyEirw&s',
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          const Positioned(
-            top: 35,
-            left: 15,
-            child: Text(
-              'Reception',
-              style: TextStyle(color: Colors.white, fontSize: 10),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
